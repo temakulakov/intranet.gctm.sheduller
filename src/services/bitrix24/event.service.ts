@@ -1,0 +1,60 @@
+import BitrixService from "./index";
+import axios from "axios";
+import {IEvent} from "../../types/app";
+
+class EventService extends BitrixService {
+
+    public DayJSFormat = "DD.MM.YYYY HH:mm:ss";
+
+    async getRange() {
+
+        const data = {
+            type: "company_calendar",
+            ownerId: "",
+        };
+
+        return axios.post<IBitrixResponse<IApiEvent[]>>(`${this.URL}calendar.event.get/`, data);
+    }
+
+    async addEvent(event: Omit<IEvent, 'id'>) {
+        const data = {
+            type: "company_calendar",
+            ownerId: " ",
+            name: event.title,
+            section: event.section,
+            description: event.description,
+            attendees: event.members,
+            from: event.from?.format(this.DayJSFormat),
+            to: event.to?.format(this.DayJSFormat),
+        };
+
+        return axios.post(`${this.URL}calendar.event.add/`, data);
+    }
+
+    async update(event: IEvent) {
+        const data = {
+            id: event.id,
+            type: "company_calendar",
+            ownerId: " ",
+            name: event.title,
+            section: event.section,
+            description: event.description,
+            attendees: event.members,
+            from: event.from?.format(this.DayJSFormat),
+            to: event.to?.format(this.DayJSFormat),
+        };
+
+        return axios.post(`${this.URL}calendar.event.update/`, data);
+    }
+    async delete(id: number) {
+        const data = {
+            id: id,
+            type: "company_calendar",
+            ownerId: " ",
+        };
+
+        return axios.post(`${this.URL}calendar.event.update/`, data);
+    }
+};
+
+export default new EventService;
