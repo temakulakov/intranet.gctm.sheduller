@@ -23,7 +23,7 @@ export const useAdd = (section: Partial<ISection>) => {
     const queryClient = useQueryClient();
     return useMutation({
         onSuccess: () => {
-
+            queryClient.invalidateQueries({ queryKey: ['sections'] });
         },
         mutationFn: () => {
             return sectionsService.update(section);
@@ -34,7 +34,7 @@ export const useUpdate = (section: ISection) => {
     const queryClient = useQueryClient();
     return useMutation({
         onSuccess: () => {
-
+            queryClient.invalidateQueries({ queryKey: ['sections'] });
         },
         mutationFn: () => {
             return sectionsService.update(section);
@@ -45,7 +45,7 @@ export const useDelete = (id: number) => {
     const queryClient = useQueryClient();
     return useMutation({
         onSuccess: () => {
-
+            queryClient.invalidateQueries({ queryKey: ['sections'] });
         },
         mutationFn: () => {
             return sectionsService.delete(id);

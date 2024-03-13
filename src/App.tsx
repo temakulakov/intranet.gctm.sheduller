@@ -1,22 +1,28 @@
-import React from 'react';
-import './App.css';
-import {useEvents} from "./hooks/useEvents";
-
+import React, { useEffect } from 'react';
+import { useEvents } from "./hooks/useEvents";
+import styles from "./styles/App.module.scss"; // Убедитесь, что путь указан правильно
+import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./store/slices";
+import permissions, { setPermission } from "./store/slices/permissions";
 
 function App() {
-  const { isLoading, isSuccess, error, data } = useEvents();
+    const dispatch = useDispatch();
+    const isAdminMode = useSelector((state: RootState) => state.permissions);
+    const location = useLocation(); // Используем useLocation для получения строки запроса
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+    useEffect(() => {
+        // Исправленное использование URLSearchParams для анализа строки запроса
+        const searchParams = new URLSearchParams(location.search);
+        const adminModeParam = searchParams.get('adminMode');
+        dispatch(setPermission(adminModeParam === 'Y'));
+    }, [location, dispatch]);
 
-  return (
-      <div className="App">
-        <h1>{isSuccess && data.length}</h1>
-          {
-              isSuccess && data?.map(event => <h1 key={event.id}>{`id: ${event.id} name: ${event.title} `}</h1>)
-          }
-      </div>
-  );
+    return (
+        <div className={styles.root}>
+            {String(isAdminMode)}
+        </div>
+    );
 }
 
 export default App;

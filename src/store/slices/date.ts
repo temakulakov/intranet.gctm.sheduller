@@ -23,7 +23,7 @@ const currentDateSlice = createSlice({
     },
 });
 
-export const {} = currentDateSlice.actions;
+export const { setDate, decrementDay, incrementDay} = currentDateSlice.actions;
 export default currentDateSlice.reducer;
 
 export const selectDate = (state: RootState) => state.currentDate;

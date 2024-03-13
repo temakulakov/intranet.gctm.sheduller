@@ -35,7 +35,7 @@ const groupsSlice = createSlice({
     },
 });
 
-export const {} = groupsSlice.actions;
+export const { setGroups } = groupsSlice.actions;
 export default groupsSlice.reducer;
 
 export const selectDate = (state: RootState) => state.currentDate;

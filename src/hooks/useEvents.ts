@@ -27,7 +27,7 @@ export const useUpdateEvent = (event: IEvent) => {
     const queryClient = useQueryClient();
     return useMutation({
         onSuccess: () => {
-
+            queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         mutationFn: () => {
             return eventService.update(event);
@@ -38,7 +38,7 @@ export const useAddEvent = (event: Omit<IEvent, 'id'>) => {
     const queryClient = useQueryClient();
     return useMutation({
         onSuccess: () => {
-
+            queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         mutationFn: () => {
             return eventService.addEvent(event);
@@ -48,7 +48,7 @@ export const useDeleteEvent = (id: number) => {
     const queryClient = useQueryClient();
     return useMutation({
         onSuccess: () => {
-
+            queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         mutationFn: () => {
             return eventService.delete(id);
