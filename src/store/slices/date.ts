@@ -5,20 +5,20 @@ import {RootState} from "./index";
 
 
 
-const initialState: Dayjs = dayjs();
+const initialState: {from: Dayjs} = {from: dayjs()};
 
 const currentDateSlice = createSlice({
     name: 'currentDate',
     initialState,
     reducers: {
-        setDate: (state, action: PayloadAction<string>) => {
-            return dayjs(action.payload);
+        setDate: (state, action: PayloadAction<{from: Dayjs}>) => {
+            return action.payload;
         },
-        decrementDay: (state, action: PayloadAction<number>) => {
-            return state.add(action.payload, 'day');
+        decrementDay: (state) => {
+            return { from: state.from.subtract(1, 'day') };
         },
-        incrementDay: (state, action: PayloadAction<number>) => {
-            return state.add(action.payload, 'day');
+        incrementDay: (state) => {
+            return { from: state.from.add(1, 'day') };
         }
     },
 });
