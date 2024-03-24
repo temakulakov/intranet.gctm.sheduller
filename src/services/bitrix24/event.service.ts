@@ -1,10 +1,12 @@
 import BitrixService from "./index";
 import axios from "axios";
 import {IEvent} from "../../types/app";
+import {Dayjs} from "dayjs";
 
 class EventService extends BitrixService {
 
     public DayJSFormat = "DD.MM.YYYY HH:mm:ss";
+
 
     async getRange() {
 
@@ -12,6 +14,20 @@ class EventService extends BitrixService {
             type: "company_calendar",
             ownerId: "",
         };
+
+        return axios.post<IBitrixResponse<IApiEvent[]>>(`${this.URL}calendar.event.get/`, data);
+    }
+
+    async getReportRange(sections: number[], from: Dayjs, to: Dayjs) {
+
+        const data = {
+            type: "company_calendar",
+            ownerId: "",
+            section: sections,
+            from: from.format('YYYY-MM-DD'),
+            to: to.format('YYYY-MM-DD')
+        };
+
 
         return axios.post<IBitrixResponse<IApiEvent[]>>(`${this.URL}calendar.event.get/`, data);
     }

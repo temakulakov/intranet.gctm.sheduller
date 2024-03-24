@@ -10,6 +10,7 @@ interface ISection {
 interface IGroup {
     id: number;
     title: string;
+    color: string;
     sections: ISection[];
 }
 
@@ -28,4 +29,19 @@ interface IEvent {
     from: Dayjs;
     to: Dayjs;
     members: number[];
+}
+
+interface IReport {
+    id: number;
+    color: string;
+    title: string;
+    sections: IReportSection[];
+};
+
+interface IReportSection {
+    id: number;
+    title: string;
+    eventsPath: number;
+    eventsCount: number;
+    eventsTime: number;
 }

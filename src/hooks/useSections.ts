@@ -11,7 +11,7 @@ export const useSections = () => {
                 id: Number(section.ID),
                 title: section.NAME,
                 color: section.COLOR,
-                text: section.TEXT_COLOR
+                text: section.TEXT_COLOR,
             })),
             staleTime: 5 * 60 * 1000,
         }

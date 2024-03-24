@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  min-height: 50px;
   width: 99%;
   padding: 0 10px;
 }
@@ -22,7 +22,7 @@
 
     border-radius: 5px;
 
-    box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+    box-shadow: #9D213534 0px 0px 0px 3px;
   }
   .report {
     margin: 0 10px;

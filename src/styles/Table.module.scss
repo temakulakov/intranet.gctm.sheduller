@@ -1,0 +1,28 @@
+.wrapper {
+    table {
+      thead {
+
+        tr {
+          td {
+            padding: 3px;
+            background-color: #cccccc;
+            &:first-child {
+              border-radius: 3px 0  0 3px ;
+            }
+            &:last-child {
+              border-radius: 0 3px  3px 0 ;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr:nth-child(2n) {
+          background-color: #F8FAFC;
+        }
+        tr {
+          height: 40px;
+        }
+      }
+    }
+}

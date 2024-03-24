@@ -17,6 +17,7 @@ function App() {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const adminModeParam = searchParams.get('adminMode');
+        // document.body.style.overflow = 'hidden';
     }, [location, dispatch]);
 
     return (
