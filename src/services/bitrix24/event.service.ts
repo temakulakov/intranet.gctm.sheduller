@@ -8,11 +8,12 @@ class EventService extends BitrixService {
     public DayJSFormat = "DD.MM.YYYY HH:mm:ss";
 
 
-    async getRange() {
-
+    async getRange(to: Dayjs) {
         const data = {
             type: "company_calendar",
             ownerId: "",
+            from: to.format('DD.MM.YYYY'),
+            to: to.format('DD.MM.YYYY'),
         };
 
         return axios.post<IBitrixResponse<IApiEvent[]>>(`${this.URL}calendar.event.get/`, data);

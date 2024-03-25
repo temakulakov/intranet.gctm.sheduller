@@ -4,11 +4,11 @@ import {IEvent} from "../types/app";
 import dayjs, {Dayjs} from "dayjs";
 import eventService from "../services/bitrix24/event.service";
 
-export const useEvents = () => {
+export const useEvents = (to: Dayjs) => {
     const DayJSFormat = "DD.MM.YYYY HH:mm:ss";
     return useQuery({
             queryKey: ['events'],
-            queryFn: () => EventService.getRange(),
+            queryFn: () => EventService.getRange(to),
             select: ({data}): IEvent[] => data.result.map(data => ({
                 id: Number(data.ID),
                 title: data.NAME,

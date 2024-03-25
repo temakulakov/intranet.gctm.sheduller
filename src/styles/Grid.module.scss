@@ -10,7 +10,7 @@
   flex-direction: column;
   width: fit-content;
   min-width: 350px;
-  margin-top: 30px;
+  margin-top: 25px;
   padding: 0 10px;
 }
 
@@ -22,6 +22,8 @@
       border-radius: 5px;
       justify-content: space-between;
       min-height: 45px;
+
+      align-items: center;
 
       transition: all 0.2s ease;
       &:hover {
@@ -52,6 +54,7 @@
   height: 0;
   padding: 0 10px;
   overflow: hidden;
+
   transition: all 0.2s ease;
 
 }
@@ -61,6 +64,7 @@
   height: auto;
   padding: 5px 10px;
   display: flex;
+  height: 29px;
 }
 
 .grid {
@@ -72,6 +76,7 @@
 }
 
 .rowWrapper {
+  min-height: 45px;
   display: flex;
   position: relative;
   flex-direction: column;
@@ -81,6 +86,30 @@
           #ccc, #ccc 1px, transparent 1px, transparent 200px);
 }
 
+.groupWrapper {
+  width: 100%;
+  position: relative;
+  margin: 1px;
+  background-color: rgba(49, 49, 49, 0.25);
+}
+
 .row {
+  position: relative;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  &:hover {
+    background-color: rgba(49, 49, 49, 0.34);
+  }
+}
+
+
+.eventWrapper {
+  position: absolute;
+  min-width: fit-content;
+  padding: 0 10px;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
 
 }
