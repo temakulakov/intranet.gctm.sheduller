@@ -2,6 +2,10 @@ import React from 'react';
 import Drawer from '@mui/material/Drawer';
 import {IEvent, ISection} from "../../types/app";
 import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
+import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
+import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';
+import Groups2RoundedIcon from '@mui/icons-material/Groups2Rounded';
+import NotesIcon from '@mui/icons-material/Notes';
 import {Autocomplete, Box, TextField} from "@mui/material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/slices";
@@ -38,7 +42,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
 
     const menu: IMenu[] = [
         {
-            title: 'Филиал', icon: <FmdGoodRoundedIcon/>, element: <Autocomplete
+            title: 'Филиал', icon: <AccountBalanceRoundedIcon/>, element: <Autocomplete
                 renderInput={(params) => <TextField {...params} label="Зал"/>}
                 sx={{width: 350}}
                 options={groups}
@@ -66,7 +70,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     </Box>
                 )}
             /> : <div></div>},
-        {title: 'Время начала', icon: <FmdGoodRoundedIcon/>, element: <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ru"}>
+        {title: 'Время начала', icon: <AccessTimeFilledRoundedIcon/>, element: <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ru"}>
                 <DateTimePicker
                     ampm={false}
                     views={['month', 'day', 'hours', 'minutes']}
@@ -83,7 +87,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     format="DD.MM.YYYY HH:mm"
                 />
             </LocalizationProvider>},
-        {title: 'Время окончания', icon: <FmdGoodRoundedIcon/>, element: <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ru"}>
+        {title: 'Время окончания', icon: <AccessTimeFilledRoundedIcon/>, element: <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ru"}>
                 <DateTimePicker
                     ampm={false}
                     sx={{width: 350}}
@@ -100,7 +104,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     format="DD.MM.YYYY HH:mm"
                 />
             </LocalizationProvider>},
-        {title: 'Сотрудники', icon: <FmdGoodRoundedIcon/>, element: <Autocomplete
+        {title: 'Сотрудники', icon: <Groups2RoundedIcon/>, element: <Autocomplete
                 renderInput={(params) => <TextField {...params} label="Сотрудники"/>}
                 sx={{width: 350}}
                 multiple
@@ -130,7 +134,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     <img alt={option.image} src={option.image ?? 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg'} style={{width: '20px', height: '20px', borderRadius: '50%'}} />
                     {option.name}</div>}
             />},
-        {title: 'Описание', icon: <FmdGoodRoundedIcon/>, element: <TextField
+        {title: 'Описание', icon: <NotesIcon/>, element: <TextField
                 fullWidth
                 multiline
                 label="using TextareaAutosize (rows=3)"
@@ -177,7 +181,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     <div className={styles.root}>
                         <h1><input value={activeEvent.title} onChange={(e) => setActiveEvent(prevState => {
                             if (prevState) {
-                                return {...prevState, title: e.target.value}
+                                return { ...prevState, title: e.target.value }
                             }
                         })}/></h1>
                         {list()}

@@ -21,7 +21,7 @@ const Grid = () => {
     const date = useSelector((state: RootState) => state.currentDate);
     const { isSuccess, data } = useSections();
     const { isSuccess: eventsSuccess, data: events, refetch } = useEvents(date.from);
-    // const { isSuccess, data as events }
+
     const dispatch = useDispatch();
     const groups = useSelector((state: RootState) => state.groups);
     const gridRef = useRef<HTMLDivElement>(null);
@@ -35,7 +35,7 @@ const Grid = () => {
         const currentDate = new Date();
 
         const startOfWorkDay = new Date();
-        startOfWorkDay.setHours(9, 0, 0, 0); // Установка часов и минут
+        startOfWorkDay.setHours(9, 0, 0, 0);
 
         const minutesSinceStartOfWorkDay = (currentDate.getTime() - startOfWorkDay.getTime()) / (1000 * 60);
         setScroll(dayjs().diff(dayjs().startOf('day'), 'minute') / 60 * 200 - 200);
@@ -94,13 +94,13 @@ const Grid = () => {
 
     const gridJSX = groups.map((group, indexGroup) => (
         <motion.div key={indexGroup} className={styles.groupWrapper}
-                    animate={{ marginTop: showGroups.includes(group.id) ? '45px' : '0', height: showGroups.includes(group.id) ? 'fit-content' : `${20 * group.sections.length}px` }}
+                    animate={{ marginTop: showGroups.includes(group.id) ? '45px' : '0', height: showGroups.includes(group.id) ? 'fit-content' : `${20 * group.sections.length}px`, minHeight: showGroups.includes(group.id) ? '' : '45px' }}
         >
             {group.sections.map((section, indexSection) => (
                 <motion.div
                     key={indexSection}
                     className={styles.row}
-                    animate={{ height: showGroups.includes(group.id) ? '39px' : '20px'}}
+                    animate={{ height: showGroups.includes(group.id) ? '39px' : `${group.sections.length === 1 ? '100%' : '20px'}px` }}
                     onMouseEnter={() => setContent(<h3>{`Создать новое событие в ${section.title}`}</h3>)}
                     onMouseLeave={() => setContent(null)}
                     onClick={() => {
@@ -113,7 +113,7 @@ const Grid = () => {
                                     onClick={() => {
                                         setIsOpen(true);
                                         setActiveEvent(event);
-                                    }}
+                                    }   }
                                     onMouseEnter={() => setContent(<>
                                         <h3>{event.title}</h3>
                                         <p>{event.description}</p>
