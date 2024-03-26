@@ -2,6 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import currentDate from './date';
 import groups from "./group";
 import permissions from "./permissions";
+import currentEvent from "./event";
 // Импортируйте ваши редюсеры здесь
 
 const rootReducer = combineReducers({
@@ -9,6 +10,7 @@ const rootReducer = combineReducers({
     currentDate: currentDate,
     groups: groups,
     permissions: permissions,
+    currentEvent: currentEvent,
     // Вы можете добавить другие редюсеры по мере необходимости
 });
 

@@ -39,9 +39,11 @@ const Popover: React.FC<FollowCursorProps> = ({ isView }) => {
                 y: position.y - 20,
                 pointerEvents: 'none', // Элемент не будет взаимодействовать с курсором
                 boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px',
-
                 zIndex: 150,
+                overflow: 'hidden',
             }}
+            initial={{ opacity: 0, width: '0%', height: '0%' }}
+            animate={{ opacity: 1, width: 'fit-content', height: 'fit-content' }}
             // Анимация следования за курсором с плавностью
         >{isView}</motion.div>
     ) : null;

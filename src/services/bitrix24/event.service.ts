@@ -70,7 +70,7 @@ class EventService extends BitrixService {
             ownerId: " ",
         };
 
-        return axios.post(`${this.URL}calendar.event.update/`, data);
+        return axios.post(`${this.URL}calendar.event.delete/`, data);
     }
 };
 

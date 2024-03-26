@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import {useSections} from "../../hooks/useSections";
 import styles from 'styles/Drawer.module.scss'
+import {useAddEvent, useDeleteEvent, useUpdateEvent} from "../../hooks/useEvents";
 
 interface RightDrawerProps {
     isOpen: boolean;
@@ -33,13 +34,31 @@ interface IMenu {
 }
 
 
-const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEvent = {id: 0, title: 'Новое событие', description: '', section: [], from: dayjs(), to: dayjs(), members: []}, setActiveEvent}) => {
+const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEvent = {id: 0, title: 'Новое событие', description: '', section: 0, from: dayjs(), to: dayjs(), members: [0]}, setActiveEvent}: RightDrawerProps) => {
     const groups = useSelector((state: RootState) => state.groups);
     const date = useSelector(( state: RootState) => state.currentDate);
     const { isSuccess, data: sections } = useSections();
     const { data: users } = useUsers();
+    const addEventMutation = useAddEvent(activeEvent);
+    const updateEventMutation = useUpdateEvent(activeEvent);
+    const deleteEventMutation = useDeleteEvent(activeEvent?.id);
     const arr: number[] = [];
 
+    const handleUpdate = async () => {
+        if(activeEvent?.id === 0) {
+            await addEventMutation.mutate();
+        } else {
+            await updateEventMutation.mutate();
+        }
+        toggleDrawer(false);
+        setActiveEvent(undefined);
+    }
+
+    const handleDelete = async () => {
+        await deleteEventMutation.mutate();
+        toggleDrawer(false);
+        setActiveEvent(undefined);
+    }
     const menu: IMenu[] = [
         {
             title: 'Филиал', icon: <AccountBalanceRoundedIcon/>, element: <Autocomplete
@@ -60,8 +79,18 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
         {title: 'Зал', icon: <FmdGoodRoundedIcon/>, element: sections ? <Autocomplete
                 renderInput={(params) => <TextField {...params} label="Зал"/>}
                 sx={{width: 350}}
-                options={sections?.filter(section => groups.forEach(group => group.sections.some(section => section.id === activeEvent?.section)))}
-                // value={groups.find(group => group.sections.some(section => section.id === activeEvent?.section))}
+                options={sections?.filter(section => groups.filter(group => group.sections.some(section => section.id === activeEvent?.section)))}
+                value={sections.find(section => section.id === activeEvent?.section)}
+                onChange={(event, newValue) => {
+                    if (newValue) {
+                        setActiveEvent((prevState ) => {
+                            return {
+                                ...activeEvent,
+                                section: newValue.id
+                            }
+                        })
+                    }
+                }}
                 getOptionLabel={(option) => option.title}
                 renderOption={(props, option) => (
                     <Box component="li" {...props}>
@@ -94,7 +123,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     views={['month', 'day', 'hours', 'minutes']}
                     maxDateTime={activeEvent?.to}
                     label={`${activeEvent ? activeEvent?.to.date() : date.from.date()} ${Month[activeEvent ? activeEvent?.to.month() : date.from.month()]} ${activeEvent ? activeEvent?.to.year() : date.from.year()} ${WeekDay[activeEvent?.to.day() ? activeEvent?.to.day() : date.from.day()]}`}
-                    value={activeEvent?.from} // Убедитесь, что selectedEvent?.DATE_FROM корректно обрабатывается
+                    value={activeEvent?.to} // Убедитесь, что selectedEvent?.DATE_FROM корректно обрабатывается
                     onChange={(newValue) => {
                         setActiveEvent((prev) => {
                             if (!prev || !newValue) return prev; // Возвращаем prev, если оно равно null или newValue равно null
@@ -108,31 +137,19 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                 renderInput={(params) => <TextField {...params} label="Сотрудники"/>}
                 sx={{width: 350}}
                 multiple
-                onChange={(e, value) => setActiveEvent((prevState) => {
-                    // Убедитесь, что prevState не является undefined, прежде чем распространять его свойства.
-                    // Если prevState не определено, предоставьте начальное значение для объекта события.
-                    const initialState: IEvent = prevState ?? {
-                        id: -1, // Установите корректное значение по умолчанию для id или получите его из другого источника
-                        title: "",
-                        description: "",
-                        section: 0,
-                        from: dayjs(), // Используйте библиотеку dayjs для установки начальных значений для дат
-                        to: dayjs(),
-                        members: []
-                    };
-
-                    // Обновите поле members на основе выбранных значений. Убедитесь, что все остальные поля корректно обработаны.
+                value={users ? users.filter(user => activeEvent?.members.includes(user.id)) : []}
+                onChange={(e, users) => setActiveEvent((prevState) => {
                     return {
-                        ...initialState,
-                        members: value.map((member) => member.id) // Предполагается, что value - это массив объектов с полем id.
+                        ...activeEvent,
+                        members: users.map((member) => member.id) // Предполагается, что value - это массив объектов с полем id.
                     };
                 })}
 
                 options={users ?? []}
                 getOptionLabel={(option) => option.name}
-                renderOption={(props, option) => <div key={option.id}>
-                    <img alt={option.image} src={option.image ?? 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg'} style={{width: '20px', height: '20px', borderRadius: '50%'}} />
-                    {option.name}</div>}
+                renderOption={(props, option) => <Box component="li" {...props} key={option.id}>
+                    <img alt={option.image} loading="lazy" src={option.image ?? 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg'} style={{width: '20px', height: '20px', borderRadius: '50%'}} />
+                    {option.name}</Box>}
             />},
         {title: 'Описание', icon: <NotesIcon/>, element: <TextField
                 fullWidth
@@ -155,10 +172,18 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
 
             />},
     ];
+
+    // React.useEffect(() => {
+    //     console.log("activeEvent");
+    //     console.log(activeEvent);
+    // }, [activeEvent])
     const list = () => (
         <div
             role="presentation"
-            onKeyDown={() => toggleDrawer(false)}
+            onKeyDown={() => {
+                toggleDrawer(false)
+                setActiveEvent(undefined)
+            }}
         >
             <table>
                 <tbody>
@@ -177,7 +202,10 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
     return (
         <div>
             <React.Fragment>
-                <Drawer anchor="right" open={isOpen} onClose={() => toggleDrawer(false)}>
+                <Drawer anchor="right" open={isOpen} onClose={() => {
+                    toggleDrawer(false);
+                    setActiveEvent(undefined);
+                }}>
                     <div className={styles.root}>
                         <h1><input value={activeEvent.title} onChange={(e) => setActiveEvent(prevState => {
                             if (prevState) {
@@ -187,8 +215,8 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                         {list()}
                         <h1>Загрузить файлы</h1>
                         <div>
-                            <button>{"Сохранить"}</button>
-                            <button>{"Отменить"}</button>
+                            <button onClick={handleUpdate}>{activeEvent?.id === 0 ? "Сохранить" : "Обновить"}</button>
+                            <button onClick={handleDelete}>{activeEvent?.id === 0 ? "Отменить" : "Удалить"}</button>
                         </div>
                     </div>
                 </Drawer>
