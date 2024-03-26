@@ -104,7 +104,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     ampm={false}
                     views={['month', 'day', 'hours', 'minutes']}
                     sx={{width: 350}}
-                    maxDateTime={activeEvent?.from}
+                    maxDateTime={activeEvent?.to}
                     label={`${activeEvent ? activeEvent?.from.date() : date.from.date()} ${Month[activeEvent ? activeEvent?.from.month() : date.from.month()]} ${activeEvent ? activeEvent?.from.year() : date.from.year()} ${WeekDay[activeEvent?.from.day() ? activeEvent?.from.day() : date.from.day()]}`}
                     value={activeEvent?.from} // Убедитесь, что selectedEvent?.DATE_FROM корректно обрабатывается
                     onChange={(newValue) => {
@@ -121,7 +121,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     ampm={false}
                     sx={{width: 350}}
                     views={['month', 'day', 'hours', 'minutes']}
-                    maxDateTime={activeEvent?.to}
+                    minDateTime={activeEvent?.from}
                     label={`${activeEvent ? activeEvent?.to.date() : date.from.date()} ${Month[activeEvent ? activeEvent?.to.month() : date.from.month()]} ${activeEvent ? activeEvent?.to.year() : date.from.year()} ${WeekDay[activeEvent?.to.day() ? activeEvent?.to.day() : date.from.day()]}`}
                     value={activeEvent?.to} // Убедитесь, что selectedEvent?.DATE_FROM корректно обрабатывается
                     onChange={(newValue) => {

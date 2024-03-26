@@ -105,12 +105,14 @@ const Grid = () => {
                     onMouseLeave={() => setContent(null)}
                     onClick={() => {
                         setIsOpen(true);
+                        setActiveEvent({id: 0, title: 'Новое событие', description: '', section: section.id, from: dayjs(), to: dayjs(), members: [0]});
                     }}
                 >
                     {
                         events && events.filter(event => event.section === section.id).map((event, indexEvent) => (
                                 <motion.div
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         setIsOpen(true);
                                         setActiveEvent(event);
                                     }   }

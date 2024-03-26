@@ -16,7 +16,7 @@ export const useEvents = (to: Dayjs) => {
                 from: dayjs(data.DATE_FROM, DayJSFormat),
                 to: dayjs(data.DATE_TO, DayJSFormat),
                 section: Number(data.SECTION_ID),
-                members: data.attendeesEntityList.map(element => Number(element.id)),
+                members: data.ATTENDEE_LIST.map(element => Number(element.id)),
             })),
             staleTime: 0.5 * 60 * 1000,
         }
@@ -35,7 +35,7 @@ export const useReportEvents = (to: Dayjs, from: Dayjs, sections: number[]) => {
                 from: dayjs(data.DATE_FROM, DayJSFormat),
                 to: dayjs(data.DATE_TO, DayJSFormat),
                 section: Number(data.SECTION_ID),
-                members: data.attendeesEntityList.map(element => Number(element.id)),
+                members: data.ATTENDEE_LIST.map(element => Number(element.id)),
             })),
             staleTime: 0.5 * 60 * 1000,
         }

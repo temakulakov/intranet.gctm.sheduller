@@ -15,7 +15,7 @@ const Calendar = () => {
 
     return <motion.div
         className={styles.container}
-        onClick={() => setFull(!fullCalendar)}
+        // onClick={() => setFull(!fullCalendar)}
         initial={{ minWidth: 0 }}
         animate={{ minWidth: fullCalendar ? '400px' :  '320px', height: fullCalendar ? '100vh' :  '334px' }}
     >
