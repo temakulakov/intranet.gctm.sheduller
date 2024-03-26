@@ -43,6 +43,7 @@ const Grid = () => {
 
 
     useEffect(() => {
+
         if (isSuccess) {
             dispatch(setGroups(data));
         }
@@ -50,6 +51,7 @@ const Grid = () => {
 
     useEffect(() => {
         console.log(events);
+
     }, [events]);
 
     useEffect(() => {
@@ -61,7 +63,8 @@ const Grid = () => {
         if (gridRef.current) {
             gridRef.current.scrollLeft = scroll;
         }
-    }, [scroll]);
+    }, [scroll, gridRef.current ]);
+
 
     const handleWheelScroll = (event: React.WheelEvent<HTMLDivElement>) => {
         setScroll(prev => prev + event.deltaY)
@@ -100,7 +103,7 @@ const Grid = () => {
                 <motion.div
                     key={indexSection}
                     className={styles.row}
-                    animate={{ height: showGroups.includes(group.id) ? '39px' : `${group.sections.length === 1 ? '100%' : '20px'}px` }}
+                    animate={{ height: showGroups.includes(group.id) ? '39px' : `20px` }}
                     onMouseEnter={() => setContent(<h3>{`Создать новое событие в ${section.title}`}</h3>)}
                     onMouseLeave={() => setContent(null)}
                     onClick={() => {
@@ -123,7 +126,7 @@ const Grid = () => {
                                     className={styles.eventWrapper}
                                     key={event.id}
                                     initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, x: event.from.diff(event.from.startOf('day'), 'minutes') / 60 * 200, height: showGroups.includes(group.id) ? '30px' : '20px', backgroundColor: group.color }}
+                                    animate={{ opacity: 1, x: event.from.diff(event.from.startOf('day'), 'minutes') / 60 * 200, height: showGroups.includes(group.id) ? '39px' : '20px', backgroundColor: group.color }}
                                 >{`${event.title} | ${event.from.format('hh:mm DD.MM.YYYY')}`}</motion.div>
                         ))
                     }
