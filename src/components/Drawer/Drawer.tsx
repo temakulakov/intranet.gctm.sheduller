@@ -6,7 +6,7 @@ import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded
 import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';
 import Groups2RoundedIcon from '@mui/icons-material/Groups2Rounded';
 import NotesIcon from '@mui/icons-material/Notes';
-import {Autocomplete, Box, TextField} from "@mui/material";
+import {Autocomplete, Box, Button, TextField} from "@mui/material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/slices";
 import {DateTimePicker, LocalizationProvider} from "@mui/x-date-pickers";
@@ -159,7 +159,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     inputComponent: TextareaAutosize,
                     rows: 3
                 }}
-                value={activeEvent.description}
+                value={activeEvent?.description}
                 onChange={(e) => {
                     if (activeEvent) {
                         setActiveEvent((prevState) => {
@@ -180,9 +180,12 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
     const list = () => (
         <div
             role="presentation"
-            onKeyDown={() => {
-                toggleDrawer(false)
-                setActiveEvent(undefined)
+            onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                    toggleDrawer(false);
+                    setActiveEvent(undefined);
+                }
+
             }}
         >
             <table>
@@ -198,7 +201,6 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
             </table>
         </div>
     );
-
     return (
         <div>
             <React.Fragment>
@@ -207,16 +209,20 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                     setActiveEvent(undefined);
                 }}>
                     <div className={styles.root}>
-                        <h1><input value={activeEvent.title} onChange={(e) => setActiveEvent(prevState => {
-                            if (prevState) {
-                                return { ...prevState, title: e.target.value }
-                            }
-                        })}/></h1>
-                        {list()}
-                        <h1>Загрузить файлы</h1>
                         <div>
-                            <button onClick={handleUpdate}>{activeEvent?.id === 0 ? "Сохранить" : "Обновить"}</button>
-                            <button onClick={handleDelete}>{activeEvent?.id === 0 ? "Отменить" : "Удалить"}</button>
+                            <h1><input className={styles.title} value={activeEvent.title} onChange={(e) => setActiveEvent(prevState => {
+                                if (prevState) {
+                                    return {...prevState, title: e.target.value}
+                                }
+                            })}/></h1>
+                            {list()}
+                            <h1>Загрузить файлы</h1>
+                        </div>
+                        <div className={styles.buttonGroup}>
+                            <Button variant='contained'
+                                    onClick={handleUpdate}>{activeEvent?.id === 0 ? "Сохранить" : "Обновить"}</Button>
+                            <Button variant={'outlined'}
+                                    onClick={handleDelete}>{activeEvent?.id === 0 ? "Отменить" : "Удалить"}</Button>
                         </div>
                     </div>
                 </Drawer>

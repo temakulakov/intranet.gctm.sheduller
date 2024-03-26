@@ -10,7 +10,7 @@ interface IChartData {
     title: string;
     percante: number;
     color: string;
-    sections: IReportSection[]
+    sections: IReportSection[];
 }
 
 const CustomTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload }) => {
