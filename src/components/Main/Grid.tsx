@@ -81,6 +81,7 @@ const Grid = () => {
 
 
     const handleWheelScroll = (event: React.WheelEvent<HTMLDivElement>) => {
+        event.stopPropagation();
         setScroll(prev => prev + event.deltaY)
     };
 
