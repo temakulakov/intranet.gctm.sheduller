@@ -112,7 +112,12 @@ const Grid = () => {
                                 overflow: 'hidden',
                                 borderRadius: '5px',
                                 margin: '0 10px'
-                            }}>
+                            }}
+                                 onMouseLeave={() => setContent(<div></div>)}
+                                 onMouseEnter={() => setContent(<div>
+                                     <p>{`${Number(loadSections.find(item => item.id === section.id)?.hours).toFixed(1)}ч из 8ч`}</p>
+                                 </div>)}
+                            >
                                 <motion.div animate={{
                                     height: '100%',
                                     width: `${Number(loadSections.find(item => item.id === section.id)?.percentes).toFixed(1)}%`,
@@ -164,10 +169,11 @@ const Grid = () => {
                                     setIsOpen(true);
                                     setActiveEvent(event);
                                 }}
-                                onMouseEnter={() => setContent(<>
-                                    <h3>{event.title}</h3>
+                                onMouseEnter={() => setContent(<div>
+                                    <p><b>{event.title}</b></p>
+                                    <p>{`${event.from.format('hh:mm')} - ${event.to.format('hh:mm')}`}</p>
                                     <p>{event.description}</p>
-                                </>)}
+                                </div>)}
                                 className={styles.eventWrapper}
                                 key={event.id}
                                 initial={{opacity: 0}}

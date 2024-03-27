@@ -6,7 +6,7 @@ class DiskService extends BitrixService {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('data', JSON.stringify({
-            FOLDER_ID: 225,
+            FOLDER_ID: 3648,
             NAME: file.name,
         }));
 
