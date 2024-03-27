@@ -29,6 +29,8 @@ const Grid = () => {
     const { isSuccess, data } = useSections();
     const { isSuccess: eventsSuccess, data: events, refetch, isFetching } = useEvents(date.from);
 
+    const adminMode = useSelector((state: RootState) => state.permissions);
+
     const dispatch = useDispatch();
     const groups = useSelector((state: RootState) => state.groups);
     const gridRef = useRef<HTMLDivElement>(null);
@@ -146,19 +148,22 @@ const Grid = () => {
                     key={indexSection}
                     className={styles.row}
                     animate={{height: showGroups.includes(group.id) ? '39px' : `20px`}}
-                    onMouseEnter={() => setContent(<h3>{`Создать новое событие в ${section.title}`}</h3>)}
+                    onMouseEnter={() => setContent(<h3>{adminMode ? `Создать новое событие в ${section.title}` : ``}</h3>)}
                     onMouseLeave={() => setContent(null)}
                     onClick={() => {
-                        setIsOpen(true);
-                        setActiveEvent({
-                            id: 0,
-                            title: 'Новое событие',
-                            description: '',
-                            section: section.id,
-                            from: dayjs(),
-                            to: dayjs().add(1, 'hour'),
-                            members: [0]
-                        });
+                        if (adminMode) {
+                            setIsOpen(true);
+                            setActiveEvent({
+                                id: 0,
+                                title: 'Новое событие',
+                                description: '',
+                                section: section.id,
+                                from: dayjs(),
+                                to: dayjs().add(1, 'hour'),
+                                members: [0]
+                            });
+                        }
+
                     }}
                 >
                     {

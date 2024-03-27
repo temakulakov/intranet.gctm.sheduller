@@ -7,6 +7,7 @@ import {useSections} from "./hooks/useSections";
 import {setGroups} from "./store/slices/group";
 import Main from "./components/Main/Main";
 import Calendar from "./components/Calendar/Calendar";
+import {setPermission} from "./store/slices/permissions";
 
 function App() {
 
@@ -17,6 +18,9 @@ function App() {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const adminModeParam = searchParams.get('adminMode');
+        if (adminModeParam === 'Y') {
+            dispatch(setPermission(true));
+        }
         // document.body.style.overflow = 'hidden';
     }, [location, dispatch]);
 
