@@ -43,8 +43,6 @@ export const useReportEvents = (to: Dayjs, from: Dayjs, sections: number[]) => {
 }
 
 export const useUpdateEvent = (event: IEvent) => {
-    console.log("event");
-    console.log(event);
     const queryClient = useQueryClient();
     return useMutation({
         onSuccess: () => {

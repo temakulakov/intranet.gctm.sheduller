@@ -19,6 +19,7 @@ import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import {useSections} from "../../hooks/useSections";
 import styles from 'styles/Drawer.module.scss'
 import {useAddEvent, useDeleteEvent, useUpdateEvent} from "../../hooks/useEvents";
+import DragAndDrop from "./UploadArea";
 
 interface RightDrawerProps {
     isOpen: boolean;
@@ -70,7 +71,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                 getOptionLabel={(option) => option.title}
                 renderOption={(props, option) => (
                     <Box component="li" {...props}>
-                        <div style={{backgroundColor: option.color, width: '20px', height: '20px', borderRadius: '50%'}} />
+                        <div style={{backgroundColor: option.color, width: '20px', height: '20px', borderRadius: '50%', marginRight: '10px'}} />
                         {option.title}
                     </Box>
                 )}
@@ -94,7 +95,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                 getOptionLabel={(option) => option.title}
                 renderOption={(props, option) => (
                     <Box component="li" {...props}>
-                        <div style={{backgroundColor: option.color, width: '20px', height: '20px', borderRadius: '50%'}} />
+                        <div style={{backgroundColor: option.color, width: '20px', height: '20px', borderRadius: '50%', marginRight: '10px'}} />
                         {option.title}
                     </Box>
                 )}
@@ -148,13 +149,13 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                 options={users ?? []}
                 getOptionLabel={(option) => option.name}
                 renderOption={(props, option) => <Box component="li" {...props} key={option.id}>
-                    <img alt={option.image} loading="lazy" src={option.image ?? 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg'} style={{width: '20px', height: '20px', borderRadius: '50%'}} />
+                    <img alt={option.image} loading="lazy" src={option.image ?? 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg'} style={{width: '20px', height: '20px', borderRadius: '50%', marginRight: '10px'}} />
                     {option.name}</Box>}
             />},
         {title: 'Описание', icon: <NotesIcon/>, element: <TextField
                 fullWidth
                 multiline
-                label="using TextareaAutosize (rows=3)"
+                label="Описание"
                 InputProps={{
                     inputComponent: TextareaAutosize,
                     rows: 3
@@ -173,10 +174,6 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
             />},
     ];
 
-    // React.useEffect(() => {
-    //     console.log("activeEvent");
-    //     console.log(activeEvent);
-    // }, [activeEvent])
     const list = () => (
         <div
             role="presentation"
@@ -216,7 +213,8 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                                 }
                             })}/></h1>
                             {list()}
-                            <h1>Загрузить файлы</h1>
+                            <h4>Прикрепленные файлы</h4>
+                            <DragAndDrop/>
                         </div>
                         <div className={styles.buttonGroup}>
                             <Button variant='contained'

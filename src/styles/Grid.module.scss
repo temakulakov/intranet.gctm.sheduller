@@ -15,7 +15,7 @@
 }
 
 .groupElement {
-
+    margin-top: 1px;
     .titleGroup {
       display: flex;
       cursor: pointer;
@@ -43,6 +43,8 @@
 .groupElementActive {
   .titleGroup {
     height: 25px;
+    margin: 1px;
+
     svg {
       transform: rotate(90deg);
     }
@@ -54,7 +56,6 @@
   height: 0;
   padding: 0 10px;
   overflow: hidden;
-
   transition: all 0.2s ease;
 
 }
@@ -66,6 +67,13 @@
   display: flex;
   height: 29px;
   align-items: center;
+  justify-content: space-between;
+
+  div {
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 .grid {
@@ -108,7 +116,7 @@
 .eventWrapper {
   position: absolute;
   min-width: fit-content;
-  padding: 0 10px;
+  //padding: 0 10px;
   border-radius: 3px;
   color: white;
   cursor: pointer;

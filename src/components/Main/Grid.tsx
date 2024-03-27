@@ -12,15 +12,22 @@ import dayjs from "dayjs";
 import {useEvents} from "../../hooks/useEvents";
 import Popover from "../Popover/Popover";
 import RightDrawer from "../Drawer/Drawer";
-import {IEvent} from "../../types/app";
+import {IEvent, ISection} from "../../types/app";
+import calculateSectionTimes from "../../helpres/calculateSectionTimes";
 
 const cx = classNames.bind(styles);
+
+export interface ILoadingSections {
+    id: number;
+    hours?: number;
+    percentes?: number;
+}
 
 const Grid = () => {
     const [scroll, setScroll] = useState(0);
     const date = useSelector((state: RootState) => state.currentDate);
     const { isSuccess, data } = useSections();
-    const { isSuccess: eventsSuccess, data: events, refetch } = useEvents(date.from);
+    const { isSuccess: eventsSuccess, data: events, refetch, isFetching } = useEvents(date.from);
 
     const dispatch = useDispatch();
     const groups = useSelector((state: RootState) => state.groups);
@@ -28,6 +35,7 @@ const Grid = () => {
     const [ activeEvent, setActiveEvent ] = useState<IEvent>();
 
     const [isOpen, setIsOpen] = useState(false);
+    const [ loadSections, setLoadSections ] = useState<ILoadingSections[]>([]);
 
     const [ content, setContent ] = useState<JSX.Element | null>(null);
 
@@ -47,12 +55,15 @@ const Grid = () => {
         if (isSuccess) {
             dispatch(setGroups(data));
         }
-    }, [isSuccess, data, dispatch]);
 
-    useEffect(() => {
-        console.log(events);
-
-    }, [events]);
+        if (data && events) {
+            const newLoads: ILoadingSections[] = loadSections.map(item => {
+                const hours = events.reduce((acc, item) => acc + Number(item.to.date(dayjs().date()).diff(item.from.date(dayjs().date()), 'hours')), 0);
+                return { hours: hours, id: item.id,  };
+            })
+            setLoadSections(calculateSectionTimes(events, data));
+        }
+    }, [isSuccess, data, dispatch, isFetching]);
 
     useEffect(() => {
         refetch();
@@ -81,60 +92,99 @@ const Grid = () => {
                 <h4>{group.title}</h4>
                 <ArrowForwardIosRoundedIcon />
             </div>
-            {group.sections.map((section, indexSection) => (
-                <div
-                    key={indexSection}
-                    className={cx({
-                        sectionElement: true,
-                        sectionElementActive: showGroups.includes(group.id)
-                    })}
-                >
-                    <p>{section.title}</p>
-                </div>
-            ))}
+            {group.sections.map((section, indexSection) => {
+
+                return (
+                    <div
+                        key={indexSection}
+                        className={cx({
+                            sectionElement: true,
+                            sectionElementActive: showGroups.includes(group.id)
+                        })}
+                    >
+                        <p>{section.title}</p>
+                        <div>
+                            <p>{`${Number(loadSections.find(item => item.id === section.id)?.hours).toFixed(1)}ч`}</p>
+                            <div style={{
+                                height: '20px',
+                                width: '100px',
+                                backgroundColor: '#CBCBCB',
+                                overflow: 'hidden',
+                                borderRadius: '5px',
+                                margin: '0 10px'
+                            }}>
+                                <motion.div animate={{
+                                    height: '100%',
+                                    width: `${Number(loadSections.find(item => item.id === section.id)?.percentes).toFixed(1)}%`,
+                                    backgroundColor: section.color
+                                }}></motion.div>
+                            </div>
+                            <p>{`${Number(loadSections.find(item => item.id === section.id)?.percentes).toFixed(1)}%`}</p>
+                        </div>
+
+                    </div>
+                )
+            })}
         </div>
     ));
 
     const gridJSX = groups.map((group, indexGroup) => (
         <motion.div key={indexGroup} className={styles.groupWrapper}
-                    animate={{ marginTop: showGroups.includes(group.id) ? '45px' : '0', height: showGroups.includes(group.id) ? 'fit-content' : `${20 * group.sections.length}px`, minHeight: showGroups.includes(group.id) ? '' : '45px' }}
+                    animate={{
+                        marginTop: showGroups.includes(group.id) ? '45px' : '0',
+                        height: showGroups.includes(group.id) ? 'fit-content' : `${20 * group.sections.length}px`,
+                        minHeight: showGroups.includes(group.id) ? '' : '45px'
+                    }}
         >
-            {group.sections.map((section, indexSection) => (
-                <motion.div
+            {group.sections.map((section, indexSection) => {
+                return <motion.div
                     key={indexSection}
                     className={styles.row}
-                    animate={{ height: showGroups.includes(group.id) ? '39px' : `20px` }}
+                    animate={{height: showGroups.includes(group.id) ? '39px' : `20px`}}
                     onMouseEnter={() => setContent(<h3>{`Создать новое событие в ${section.title}`}</h3>)}
                     onMouseLeave={() => setContent(null)}
                     onClick={() => {
                         setIsOpen(true);
-                        setActiveEvent({id: 0, title: 'Новое событие', description: '', section: section.id, from: dayjs(), to: dayjs(), members: [0]});
+                        setActiveEvent({
+                            id: 0,
+                            title: 'Новое событие',
+                            description: '',
+                            section: section.id,
+                            from: dayjs(),
+                            to: dayjs().add(1, 'hour'),
+                            members: [0]
+                        });
                     }}
                 >
                     {
                         events && events.filter(event => event.section === section.id).map((event, indexEvent) => (
-                                <motion.div
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setIsOpen(true);
-                                        setActiveEvent(event);
-                                    }   }
-                                    onMouseEnter={() => setContent(<>
-                                        <h3>{event.title}</h3>
-                                        <p>{event.description}</p>
-                                    </>)}
-                                    className={styles.eventWrapper}
-                                    key={event.id}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, x: event.from.diff(event.from.startOf('day'), 'minutes') / 60 * 200, height: showGroups.includes(group.id) ? '39px' : '20px', backgroundColor: group.color }}
-                                >{`${event.title} | ${event.from.format('hh:mm DD.MM.YYYY')}`}</motion.div>
+                            <motion.div
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsOpen(true);
+                                    setActiveEvent(event);
+                                }}
+                                onMouseEnter={() => setContent(<>
+                                    <h3>{event.title}</h3>
+                                    <p>{event.description}</p>
+                                </>)}
+                                className={styles.eventWrapper}
+                                key={event.id}
+                                initial={{opacity: 0}}
+                                animate={{
+                                    opacity: 1,
+                                    x: event.from.diff(event.from.startOf('day'), 'minutes') / 60 * 200,
+                                    height: showGroups.includes(group.id) ? '39px' : '20px',
+                                    backgroundColor: group.color,
+                                    width: `${event.to.date(dayjs().date()).diff(event.from.date(dayjs().date()), 'minute') / 60 * 200}px`
+                                }}
+                            >{`${event.title}`}</motion.div>
                         ))
                     }
                 </motion.div>
-            ))}
+            })}
         </motion.div>
     ));
-
 
 
     return (
@@ -155,7 +205,8 @@ const Grid = () => {
                 )}
             </div>
             <Popover isView={content}/>
-            <RightDrawer isOpen={isOpen} toggleDrawer={setIsOpen} activeEvent={activeEvent} setActiveEvent={setActiveEvent} />
+            <RightDrawer isOpen={isOpen} toggleDrawer={setIsOpen} activeEvent={activeEvent}
+                         setActiveEvent={setActiveEvent}/>
         </>
     );
 };
