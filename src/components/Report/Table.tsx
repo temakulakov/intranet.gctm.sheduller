@@ -4,9 +4,6 @@ import {IEvent, IReport} from "../../types/app";
 import styles from "styles/Table.module.scss"
 import {Dayjs} from "dayjs";
 
-
-
-
 interface IProps {
     data: IReport[];
     date: { from: Dayjs, to: Dayjs };
@@ -35,6 +32,7 @@ const Table = ({data, date}: IProps) => {
         {label: 'Кол-во мероприятий', key: 'eventCount'},
         {label: 'Кол-во часов', key: 'hoursCount'}
     ];
+
     csvData.unshift(headers.map(header => header.label));
 
     return <div className={styles.wrapper} style={{width: '100%', marginTop: "20px"}}>

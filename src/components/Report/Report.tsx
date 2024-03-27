@@ -27,7 +27,7 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
     const groups = useSelector((state: RootState) => state.groups.filter(group => group.title !== "Праздники"));
 
     // Изменено: использование хука useEffect для загрузки данных только при изменении selectedGroups или date
-    const { data, refetch, isSuccess } = useReportEvents(date.to, date.from, selectedGroups.flatMap(group => group.sections.map(section => section.id)));
+    const { data, refetch, isSuccess, isFetching, isPending } = useReportEvents(date.to, date.from, selectedGroups.flatMap(group => group.sections.map(section => section.id)));
 
     const [reportData, setReportData] = useState<IReport[]>([]);
 
@@ -77,7 +77,7 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
 
             setReportData(updatedReportData);
         }
-    }, [isSuccess, data]);
+    }, [ isFetching, isSuccess, refetch ]);
 
     const renderReport = ()  => {
         if (data && data.length > 0) {

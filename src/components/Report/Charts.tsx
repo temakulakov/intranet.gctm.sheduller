@@ -4,6 +4,7 @@ import { IReport, IReportSection } from "../../types/app";
 
 interface IProps {
     data: IReport[];
+
 }
 
 interface IChartData {
@@ -51,7 +52,7 @@ const CustomColorBarChart: React.FC<IProps> = ({ data }) => {
             };
         });
         setChartData(transformedData);
-    }, [data]);
+    }, []);
 
     return (
         <BarChart width={790} height={600} data={chartData} layout="vertical">

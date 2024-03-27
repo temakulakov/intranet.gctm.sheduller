@@ -148,7 +148,7 @@ const Grid = () => {
                     key={indexSection}
                     className={styles.row}
                     animate={{height: showGroups.includes(group.id) ? '39px' : `20px`}}
-                    onMouseEnter={() => setContent(<h3>{adminMode ? `Создать новое событие в ${section.title}` : ``}</h3>)}
+                    onMouseEnter={() => setContent(adminMode ? <h3>{ `Создать новое событие в ${section.title}`}</h3> : null)}
                     onMouseLeave={() => setContent(null)}
                     onClick={() => {
                         if (adminMode) {
