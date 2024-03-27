@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Drawer from '@mui/material/Drawer';
 import {IEvent, ISection} from "../../types/app";
 import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
@@ -44,6 +44,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
     const updateEventMutation = useUpdateEvent(activeEvent);
     const deleteEventMutation = useDeleteEvent(activeEvent?.id);
     const arr: number[] = [];
+    const adminMode = useSelector((state: RootState) => state.permissions);
 
     const handleUpdate = async () => {
         if(activeEvent?.id === 0) {
@@ -60,6 +61,32 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
         toggleDrawer(false);
         setActiveEvent(undefined);
     }
+    const view: IMenu[] = [
+        // {
+        //     title: 'Филиал', icon: <AccountBalanceRoundedIcon/>, element: <h2>{groups.find(group => group.sections.some(section => section.id === activeEvent?.section)).title}</h2>
+        // },
+        // {
+        //     title: 'Зал', icon: <AccountBalanceRoundedIcon/>, element: <h2>{sections.find(section => section.id === activeEvent?.section)}</h2>
+        // },
+        {
+            title: 'Время начала', icon: <AccountBalanceRoundedIcon/>, element: <h2>{activeEvent.from.date()} {Month[activeEvent.from.month()]} {activeEvent.from.year()} {WeekDay[activeEvent.from.day()]}</h2>
+        },
+        {
+            title: 'Время окончания',
+            icon: <AccountBalanceRoundedIcon/>,
+            element:
+                <h2>{activeEvent.to.date()} {Month[activeEvent.to.month()]} {activeEvent.to.year()} {WeekDay[activeEvent.to.day()]}</h2>
+        },
+        // {
+        //     title: 'Сотрудники', icon: <AccountBalanceRoundedIcon/>, element: <h2>{users ? users.filter(user => activeEvent?.members.includes(user.id)) : ''}</h2>
+        // },
+        {
+            title: 'Описание', icon: <AccountBalanceRoundedIcon/>, element: <h2>{activeEvent?.description}</h2>
+        },
+        {
+            title: 'Файлы', icon: <AccountBalanceRoundedIcon/>, element: <h2>{}</h2>
+        },
+    ]
     const menu: IMenu[] = [
         {
             title: 'Филиал', icon: <AccountBalanceRoundedIcon/>, element: <Autocomplete
@@ -187,11 +214,16 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
         >
             <table>
                 <tbody>
+
                 {
-                    menu.map((item, i) => (<tr key={i}>
+                    adminMode ? menu.map((item, i) => (<tr key={i}>
                         <td><h4>{item.title}</h4></td>
                         <td>{item.icon}</td>
-                        <td >{item.element}</td>
+                        <td>{item.element}</td>
+                    </tr>)) : view.map((item, i) => (<tr key={i}>
+                        <td><h4>{item.title}</h4></td>
+                        <td>{item.icon}</td>
+                        <td>{item.element}</td>
                     </tr>))
                 }
                 </tbody>
@@ -213,6 +245,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
                                 }
                             })}/></h1>
                             {list()}
+
                             <h4>Прикрепленные файлы</h4>
                             <DragAndDrop/>
                         </div>

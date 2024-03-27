@@ -3,7 +3,7 @@ import {RootState} from "./index";
 
 
 
-const initialState: boolean = true;
+const initialState: boolean = false;
 
 const permissionsSlice = createSlice({
     name: 'adminMode',
