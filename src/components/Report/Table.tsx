@@ -33,6 +33,8 @@ const Table = ({data, date}: IProps) => {
         {label: 'Кол-во часов', key: 'hoursCount'}
     ];
 
+
+
     csvData.unshift(headers.map(header => header.label));
 
     return <div className={styles.wrapper} style={{width: '100%', marginTop: "20px"}}>

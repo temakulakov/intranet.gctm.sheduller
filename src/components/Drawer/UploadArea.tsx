@@ -50,6 +50,8 @@ const DragAndDrop: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 style={{
+                    marginTop: '20px',
+                    userSelect: 'none',
                     width: '100%',
                     height: '200px',
                     borderWidth: '2px',

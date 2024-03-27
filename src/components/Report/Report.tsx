@@ -77,7 +77,7 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
 
             setReportData(updatedReportData);
         }
-    }, [ isFetching, isSuccess, refetch ]);
+    }, [ isFetching, isSuccess, refetch, date ]);
 
     const renderReport = ()  => {
         if (data && data.length > 0) {

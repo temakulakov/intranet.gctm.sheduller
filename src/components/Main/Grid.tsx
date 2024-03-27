@@ -21,6 +21,7 @@ export interface ILoadingSections {
     id: number;
     hours?: number;
     percentes?: number;
+
 }
 
 const Grid = () => {
@@ -95,7 +96,6 @@ const Grid = () => {
                 <ArrowForwardIosRoundedIcon />
             </div>
             {group.sections.map((section, indexSection) => {
-
                 return (
                     <div
                         key={indexSection}
@@ -148,7 +148,7 @@ const Grid = () => {
                     key={indexSection}
                     className={styles.row}
                     animate={{height: showGroups.includes(group.id) ? '39px' : `20px`}}
-                    onMouseEnter={() => setContent(adminMode ? <h3>{ `Создать новое событие в ${section.title}`}</h3> : null)}
+                    onMouseEnter={() => setContent(adminMode ? <p>{ `Создать новое событие в ${section.title}`}</p> : null)}
                     onMouseLeave={() => setContent(null)}
                     onClick={() => {
                         if (adminMode) {
@@ -187,7 +187,7 @@ const Grid = () => {
                                     x: event.from.diff(event.from.startOf('day'), 'minutes') / 60 * 200,
                                     height: showGroups.includes(group.id) ? '39px' : '20px',
                                     backgroundColor: group.color,
-                                    width: `${event.to.date(dayjs().date()).diff(event.from.date(dayjs().date()), 'minute') / 60 * 200}px`
+                                    width: `${dayjs().hour(event.to.hour()).minute(event.to.minute()).diff(dayjs().hour(event.from.hour()).minute(event.from.minute()), 'minute') / 60 * 200}px`
                                 }}
                             >{`${event.title}`}</motion.div>
                         ))
