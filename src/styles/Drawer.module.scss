@@ -24,3 +24,17 @@
   font-weight: bold;
   border: none;
 }
+
+
+.close {
+  height: 40px !important;
+  width: 40px !important;
+  z-index: 999;
+  right: 600px !important;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all .5s ease-in-out;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.13);
+  }
+}

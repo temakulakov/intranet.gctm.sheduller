@@ -25,6 +25,7 @@ export interface ILoadingSections {
 }
 
 const Grid = () => {
+    const [ allScroll, setAllScroll ] = useState<boolean>(true);
     const [scroll, setScroll] = useState(0);
     const date = useSelector((state: RootState) => state.currentDate);
     const { isSuccess, data } = useSections();
@@ -39,7 +40,7 @@ const Grid = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [ loadSections, setLoadSections ] = useState<ILoadingSections[]>([]);
-
+    const [ columnShow, setColumnShow ] = useState<boolean>(true);
     const [ content, setContent ] = useState<JSX.Element | null>(null);
 
     useEffect(() => {
@@ -51,6 +52,8 @@ const Grid = () => {
         const minutesSinceStartOfWorkDay = (currentDate.getTime() - startOfWorkDay.getTime()) / (1000 * 60);
         setScroll(dayjs().diff(dayjs().startOf('day'), 'minute') / 60 * 200 - 200);
     }, []);
+
+
 
 
     useEffect(() => {
@@ -70,10 +73,12 @@ const Grid = () => {
 
     useEffect(() => {
         refetch();
+        setScroll(dayjs().diff(dayjs().startOf('day'), 'minute') / 60 * 200 - 200);
     }, [date]);
 
 
     useEffect(() => {
+
         if (gridRef.current) {
             gridRef.current.scrollLeft = scroll;
         }
@@ -81,17 +86,20 @@ const Grid = () => {
 
 
     const handleWheelScroll = (event: React.WheelEvent<HTMLDivElement>) => {
-        event.stopPropagation();
-        setScroll(prev => prev + event.deltaY)
+        // event.preventDefault();
+        // event.stopPropagation();
+        setScroll(prev => prev + event.deltaY);
     };
 
     const [showGroups, setShowGroups] = useState<number[]>([0, 1]);
 
     const columnJSX = groups.map((group, indexGroup) => (
-        <div key={indexGroup} className={cx({
+        <motion.div key={indexGroup} className={cx({
             groupElement: true,
             groupElementActive: showGroups.includes(group.id)
-        })}>
+        })}
+
+        >
             <div style={{ height: !showGroups.includes(group.id) ? `${20 * group.sections.length}px` : `${25}px` }} className={styles.titleGroup} onClick={() => setShowGroups(prevState => prevState.includes(group.id) ? prevState.filter(item => item !== group.id) : [...prevState, group.id])}>
                 <h4>{group.title}</h4>
                 <ArrowForwardIosRoundedIcon />
@@ -133,7 +141,7 @@ const Grid = () => {
                     </div>
                 )
             })}
-        </div>
+        </motion.div>
     ));
 
     const gridJSX = groups.map((group, indexGroup) => (
@@ -198,16 +206,42 @@ const Grid = () => {
         </motion.div>
     ));
 
+    useEffect(() => {
+        if (allScroll) {
+            document.body.style.overflow = 'scroll';
+            console.log("body -")
+        } else {
+            document.body.style.overflow = 'hidden';
+            console.log("body +")
+
+        }
+    }, [allScroll]);
+
 
     return (
         <>
             <div className={styles.wrapper}>
                 {isSuccess && (
                     <>
-                        <div className={styles.column}>
+                        <motion.div className={styles.column}
+                                    animate={{minWidth: columnShow ? '350px' : '0', opacity: columnShow ? 1 : 0}}>
+                            <motion.div
+                                style={{
+                                    height: '25px',
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignContent: 'center',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => setColumnShow(!columnShow)}
+
+                            >{'Скрыть'}</motion.div>
+
                             {columnJSX}
-                        </div>
-                        <motion.div className={styles.grid} ref={gridRef} onWheel={handleWheelScroll}>
+                            <div className={styles.button}></div>
+                        </motion.div>
+                        <motion.div className={styles.grid} ref={gridRef} onWheel={handleWheelScroll} tabIndex={0} onMouseLeave={() => setAllScroll(true)} onMouseEnter={() => setAllScroll(false)}>
                             <TimeLine/>
                             <div className={styles.rowWrapper}>
                                 {gridJSX}

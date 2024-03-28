@@ -20,6 +20,7 @@ import {useSections} from "../../hooks/useSections";
 import styles from 'styles/Drawer.module.scss'
 import {useAddEvent, useDeleteEvent, useUpdateEvent} from "../../hooks/useEvents";
 import DragAndDrop from "./UploadArea";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 interface RightDrawerProps {
     isOpen: boolean;
@@ -230,35 +231,49 @@ const RightDrawer: React.FC<RightDrawerProps> = ({isOpen, toggleDrawer, activeEv
             </table>
         </div>
     );
-    return (
-        <div>
-            <React.Fragment>
-                <Drawer anchor="right" open={isOpen} onClose={() => {
-                    toggleDrawer(false);
-                    setActiveEvent(undefined);
-                }}>
-                    <div className={styles.root}>
-                        <div>
-                            <h1><input className={styles.title} value={activeEvent.title} onChange={(e) => setActiveEvent(prevState => {
-                                if (prevState) {
-                                    return {...prevState, title: e.target.value}
-                                }
-                            })}/></h1>
-                            {list()}
+    return (<div>
+    <div style={{display: 'flex', position: 'relative'}}>
 
-                            <h4>Прикрепленные файлы</h4>
-                            <DragAndDrop/>
-                        </div>
-                        <div className={styles.buttonGroup}>
-                            <Button variant='contained'
-                                    onClick={handleUpdate}>{activeEvent?.id === 0 ? "Сохранить" : "Обновить"}</Button>
-                            <Button variant={'outlined'}
-                                    onClick={handleDelete}>{activeEvent?.id === 0 ? "Отменить" : "Удалить"}</Button>
+        <React.Fragment>
+            <Drawer anchor="right" open={isOpen} onClose={() => {
+                toggleDrawer(false);
+                setActiveEvent(undefined);
+            }}>
+
+                <div className={styles.root}>
+                    <div>
+                        <h1 style={{display: 'flex', justifyContent: 'space-between', alignItems: "center"}}>
+                            <input className={styles.title} value={activeEvent.title}
+                                   style={{height: "30px", width: '80%'}}
+                                   onChange={(e) => setActiveEvent(prevState => {
+                                       if (prevState) {
+                                           return {...prevState, title: e.target.value}
+                                       }
+                                   })}/>
+                            <svg className={styles.close} viewBox="0 0 24 24" onClick={() => {
+                                toggleDrawer(false);
+                                setActiveEvent(undefined)
+                            }}>
+                                <path
+                                    d="M18.3 5.71a.9959.9959 0 0 0-1.41 0L12 10.59 7.11 5.7a.9959.9959 0 0 0-1.41 0c-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4"></path>
+                            </svg>
+                        </h1>
+
+                        {list()}
+
+                        <h4>Прикрепленные файлы</h4>
+                        <DragAndDrop/>
+                    </div>
+                    <div className={styles.buttonGroup}>
+                        <Button variant='contained'
+                                onClick={handleUpdate}>{activeEvent?.id === 0 ? "Сохранить" : "Обновить"}</Button>
+                        <Button variant={'outlined'}
+                                onClick={handleDelete}>{activeEvent?.id === 0 ? "Отменить" : "Удалить"}</Button>
                         </div>
                     </div>
                 </Drawer>
             </React.Fragment>
-        </div>
+        </div></div>
     );
 };
 

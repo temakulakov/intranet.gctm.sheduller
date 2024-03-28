@@ -21,7 +21,6 @@ function App() {
         if (adminModeParam === 'Y') {
             dispatch(setPermission(true));
         }
-        // document.body.style.overflow = 'hidden';
     }, [location, dispatch]);
 
     return (
