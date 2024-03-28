@@ -3,6 +3,7 @@ import currentDate from './date';
 import groups from "./group";
 import permissions from "./permissions";
 import currentEvent from "./event";
+import fullMode from "./fullMode";
 // Импортируйте ваши редюсеры здесь
 
 const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     groups: groups,
     permissions: permissions,
     currentEvent: currentEvent,
+    fullMode: fullMode
     // Вы можете добавить другие редюсеры по мере необходимости
 });
 

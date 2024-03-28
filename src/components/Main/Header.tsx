@@ -9,13 +9,19 @@ import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import {decrementDay, incrementDay, setDate} from "../../store/slices/date";
 import dayjs from "dayjs";
 import ReportModal from "../Report/Report";
+import FullscreenRoundedIcon from '@mui/icons-material/FullscreenRounded';
+import {useUpdateEvent} from "../../hooks/useEvents";
+import {setMode} from "../../store/slices/fullMode";
 
 
 const Header = () => {
     const date = useSelector((state: RootState) => state.currentDate.from);
     const [report , setReport ] = useState(false);
+    const mode = useSelector((state: RootState) => state.fullMode);
+
 
     const dispatch = useDispatch();
+
     const handleOpen = () => {
         setReport(true);
     };
@@ -25,6 +31,12 @@ const Header = () => {
     };
 
     const Buttons: Array<React.ReactElement> = [
+        <Button
+            key={4}
+            color={'secondary'}
+            variant={'outlined'}
+            onClick={() => dispatch(setMode(!mode))}
+        ><FullscreenRoundedIcon /></Button>,
         <Button
             key={0}
             color="secondary"

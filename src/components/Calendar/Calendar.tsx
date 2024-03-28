@@ -12,28 +12,31 @@ const Calendar = () => {
     const date = useSelector((state: RootState) => state.currentDate);
     const dispatch = useDispatch();
     const [fullCalendar, setFull] = React.useState(false);
-
+    const mode = useSelector((state: RootState) => state.fullMode);
     return <motion.div
         className={styles.container}
         initial={{ minWidth: 0 }}
         animate={{ minWidth: fullCalendar ? 'fit-content' :  'fit-content', height: fullCalendar ? '100vh' :  'fit-content', transform: `scale(1)` }}
     >
         {
-            fullCalendar ? <div></div> : <AnimatePresence>
-                <motion.div
-                    initial={{opacity: 0}}
-                    animate={{opacity: 1}}
-                    exit={{opacity: 0}}
-                >
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ru"}>
-                        <DateCalendar
-                            value={date.from}
-                            onChange={(newValue) => dispatch(setDate({from: newValue}))}
-                            className={styles.root}
-                            views={['month', 'day']}
-                        />
-                    </LocalizationProvider>
-                </motion.div>
+            <AnimatePresence>
+                {
+                    mode && <motion.div
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
+                        exit={{opacity: 0}}
+                    >
+                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ru"}>
+                            <DateCalendar
+                                value={date.from}
+                                onChange={(newValue) => dispatch(setDate({from: newValue}))}
+                                className={styles.root}
+                                views={['month', 'day']}
+                            />
+                        </LocalizationProvider>
+                    </motion.div>
+                }
+
             </AnimatePresence>
         }
     </motion.div>

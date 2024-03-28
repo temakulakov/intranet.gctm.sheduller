@@ -14,6 +14,7 @@ import Popover from "../Popover/Popover";
 import RightDrawer from "../Drawer/Drawer";
 import {IEvent, ISection} from "../../types/app";
 import calculateSectionTimes from "../../helpres/calculateSectionTimes";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const cx = classNames.bind(styles);
 
@@ -94,7 +95,7 @@ const Grid = () => {
     const [showGroups, setShowGroups] = useState<number[]>([0, 1]);
 
     const columnJSX = groups.map((group, indexGroup) => (
-        <motion.div key={indexGroup} className={cx({
+        <motion.div key={indexGroup} animate={{ opacity: columnShow ? 1 : 0, width: columnShow ? '100%' : '0'}} className={cx({
             groupElement: true,
             groupElementActive: showGroups.includes(group.id)
         })}
@@ -224,19 +225,22 @@ const Grid = () => {
                 {isSuccess && (
                     <>
                         <motion.div className={styles.column}
-                                    animate={{minWidth: columnShow ? '350px' : '0', opacity: columnShow ? 1 : 0}}>
+                                    animate={{minWidth: columnShow ? '350px' : '0'}}>
                             <motion.div
                                 style={{
                                     height: '25px',
-                                    width: '100%',
+                                    width: 'fit-content',
                                     display: 'flex',
-                                    justifyContent: 'center',
+                                    padding: '0 20px',
                                     alignContent: 'center',
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    backgroundColor: 'white',
+                                    background: 'white',
+                                    zIndex: 199,
                                 }}
                                 onClick={() => setColumnShow(!columnShow)}
-
-                            >{'Скрыть'}</motion.div>
+                            ><ArrowBackIcon style={{ transform: columnShow ? 'rotate(0)' : 'rotate(180deg)', transition: 'all .3s ease' }}/>{columnShow ?
+                                <p>{'Скрыть'}</p> : <p>{'Показать'}</p>}</motion.div>
 
                             {columnJSX}
                             <div className={styles.button}></div>
