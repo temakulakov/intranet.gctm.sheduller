@@ -54,6 +54,19 @@ const CustomColorBarChart: React.FC<IProps> = ({ data }) => {
         setChartData(transformedData);
     }, []);
 
+    useEffect(() => {
+        const transformedData: IChartData[] = data.map(group => {
+            const averagePercante: number = group.sections.reduce((acc, section) => acc + section.eventsPath, 0) / group.sections.length;
+            return {
+                title: group.title,
+                percante: averagePercante,
+                color: group.color,
+                sections: group.sections
+            };
+        });
+        setChartData(transformedData);
+    }, [data]);
+
     return (
         <BarChart width={790} height={600} data={chartData} layout="vertical">
             <CartesianGrid strokeDasharray="3 3" />

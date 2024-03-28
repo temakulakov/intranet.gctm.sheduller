@@ -50,13 +50,13 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
         };
 
         initializeReportData();
-    }, [selectedGroups]);
+    }, [selectedGroups, ]);
 
     useEffect(() => {
         // Изменено: Вычисления и обновление данных отчета после успешной загрузки
         if (isSuccess && data) {
-            const updatedReportData = reportData.map(group => {
-                const updatedSections = group.sections.map(section => {
+                    const updatedReportData = reportData.map(group => {
+                    const updatedSections = group.sections.map(section => {
                     const sectionEvents = data.filter(event => event.section === section.id);
                     const eventsTime = sectionEvents.reduce((acc, event) => acc + dayjs(event.to).diff(dayjs(event.from), 'hours'), 0);
                     const eventsPath = eventsTime * 5; // Пример вычисления, адаптируйте под свои нужды
@@ -76,6 +76,7 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
             });
 
             setReportData(updatedReportData);
+            console.log("report data", updatedReportData);
         }
     }, [ isFetching, isSuccess, refetch, date ]);
 
@@ -277,7 +278,7 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
                             </Step>
                         ))}
                     </Stepper>
-                    {activeStep === steps.length && (
+                    {activeStep === steps.length && reportData && (
                         <div className={styles.bottomWrapper}>
                             <HorizontalBars data={reportData}/>
                             <CustomExport data={reportData} date={date}/>
