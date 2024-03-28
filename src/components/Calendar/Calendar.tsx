@@ -16,7 +16,7 @@ const Calendar = () => {
     return <motion.div
         className={styles.container}
         initial={{ minWidth: 0 }}
-        animate={{ minWidth: fullCalendar ? 'fit-content' :  'fit-content', height: fullCalendar ? '100vh' :  'fit-content', transform: `scale(1)` }}
+        animate={{ minWidth: fullCalendar ? 'fit-content' :  'fit-content', height: fullCalendar ? '100vh' :  'fit-content', transform: `scale(1)`, width: fullCalendar ? 'fit-content' : '0' }}
     >
         {
             <AnimatePresence>
@@ -24,7 +24,7 @@ const Calendar = () => {
                     mode && <motion.div
                         initial={{opacity: 0}}
                         animate={{opacity: 1}}
-                        exit={{opacity: 0}}
+                        exit={{opacity: 0, width: 0, padding: 0}}
                     >
                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"ru"}>
                             <DateCalendar
