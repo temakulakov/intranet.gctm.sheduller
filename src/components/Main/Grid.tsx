@@ -13,7 +13,7 @@ import {useEvents} from "../../hooks/useEvents";
 import Popover from "../Popover/Popover";
 import RightDrawer from "../Drawer/Drawer";
 import {IEvent, ISection} from "../../types/app";
-import calculateSectionTimes from "../../helpres/calculateSectionTimes";
+import calculateSectionTimes from "../../helpers/calculateSectionTimes";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const cx = classNames.bind(styles);

@@ -15,6 +15,8 @@ import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {Month, WeekDay} from "../../types/consts";
 import {useReportEvents} from "../../hooks/useEvents";
+import calculateSectionTimes from "../../helpers/calculateSectionTimes";
+import * as events from "events";
 
 interface ModalProps {
     report: boolean;
@@ -50,16 +52,18 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
         };
 
         initializeReportData();
-    }, [selectedGroups, ]);
+    }, [ selectedGroups ]);
 
     useEffect(() => {
         // Изменено: Вычисления и обновление данных отчета после успешной загрузки
         if (isSuccess && data) {
                     const updatedReportData = reportData.map(group => {
+
                     const updatedSections = group.sections.map(section => {
-                    const sectionEvents = data.filter(event => event.section === section.id);
-                    const eventsTime = sectionEvents.reduce((acc, event) => acc + dayjs(event.to).diff(dayjs(event.from), 'hours'), 0);
-                    const eventsPath = eventsTime * 5; // Пример вычисления, адаптируйте под свои нужды
+
+                        const sectionEvents = data.filter(event => event.section === section.id);
+                        const eventsTime = sectionEvents.reduce((acc, event) => acc + dayjs(event.to).diff(dayjs(event.from), 'hours'), 0);
+                        const eventsPath = eventsTime * 5; // Пример вычисления, адаптируйте под свои нужды
 
                     return {
                         ...section,
@@ -75,40 +79,11 @@ const ModalComponent: React.FC<ModalProps> = ({ report, handleClose }) => {
                 };
             });
 
+
             setReportData(updatedReportData);
             console.log("report data", updatedReportData);
         }
     }, [ isFetching, isSuccess, refetch, date ]);
-
-    const renderReport = ()  => {
-        if (data && data.length > 0) {
-            setReportData(prevState => {
-                prevState.forEach(group => ({...group, sections: group.sections.map(section => ({...section, eventsPath: 0, eventsTime: 0, eventsCount: 0}))}))
-                data.forEach((element) => {
-
-                    prevState.forEach((group, index) => {
-                        const section = group.sections.find((section) => section.id === element.section);
-                        if (section) {
-                            // Если section найден, безопасно обращаемся к eventsCount и увеличиваем его на 1
-                            section.eventsCount += 1;
-                            // Аналогично, безопасно обновляем eventsTime, предварительно проверив, что section существует
-                            section.eventsTime += dayjs(element.to, "DD.MM.YYYY HH:mm:ss").diff(dayjs(element.from, "DD.MM.YYYY HH:mm:ss"), 'hours');
-                        }
-                    });
-                });
-                setReportData(prevState => {
-                    return prevState.map(el => ({
-                        ...el,
-                        sections: el.sections.map(section => {
-                            const x = date.to.diff(date.from, 'hours');
-                            return {...section, eventsPath:  x * 8 / 24 / 100  };
-                        }),
-
-                    }))
-                })
-                return prevState;
-            });
-    }}
 
     const steps = [
         {
